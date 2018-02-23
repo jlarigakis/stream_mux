@@ -8,16 +8,22 @@ defmodule StreamMux do
 
   def main(commands) do
     {:ok, router} = Router.start_link()
-    {:ok, _} = Plug.Adapters.Cowboy.http StreamMux.LogPlug, [service: router]
+    serve_http(router)
     Logger.info "Listening on port 4000"
 
     commands
     |> stream
     |> Stream.each(&Router.send_log_entry(router, &1))
     |> Stream.run
+
+    Logger.info "All commands have finished"
   end
 
-  def stream(commands) do
+  defp serve_http(router) do
+    {:ok, _} = Plug.Adapters.Cowboy.http StreamMux.LogPlug, [service: router]
+  end
+
+  defp stream(commands) do
     pids = Enum.map(commands, fn command ->
       %Proc{pid: pid} = Porcelain.spawn_shell command, out: {:send, self()}
       pid
