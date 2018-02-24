@@ -1,4 +1,5 @@
 # StreamMux
+[![CircleCI](https://circleci.com/gh/jlarigakis/stream_mux/tree/master.svg?style=shield)](https://circleci.com/gh/jlarigakis/stream_mux/tree/master)
 
 Run multiple shell commands and serve the result as an HTTP stream.
 
